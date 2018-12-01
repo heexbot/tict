@@ -8,95 +8,94 @@ client.on('ready', () => {
 
   console.log(`Logged in as ${client.user.tag}!`);
 
-client.user.setGame(`Five Bc l FBc`,'https://www.twitch.tv/MeeRcY')
+client.user.setGame(`Five ticket l Fnew`,'https://www.twitch.tv/MeeRcY')
 
 });
 
  
-
-
- 
-
- 
-
 client.on('message', message => {
-    var prefix = 'F'; // هنا تقدر تغير البرفكس
-var command = message.content.split(" ")[0];
-if(command == prefix + 'Bc') { // الكوماند !bc
-    var args = message.content.split(' ').slice(1).join(' ');
+ var prefix = "F"
+    if(message.content.startsWith(prefix + 'new')) {
+        let args = message.content.split(' ').slice(1).join(' ');
+        let support = message.guild.roles.find("name","Support Team");
+        let ticketsStation = message.guild.channels.find("name", "TICKETS");
+        if(!args) {
+            return message.channel.send('الرجاء كتابة سبب التذكرة');
+        };
+                if(!support) {
+                    return message.channel.send('**Please make sure that `Support Team` role exists and it\'s not duplicated.**');
+                };
+            if(!ticketsStation) {
+                message.guild.createChannel("Ticket", "category");
+            };
+                message.guild.createChannel(`𝑻𝑰𝑪𝑲𝑬𝑻`, "text").then(ticket => {
+                    message.delete()
+                        message.channel.send(`تم انشاء تذكرتك. [ ${ticket} ]`);
+                    ticket.setParent(ticketsStation);
+                    ticketsStation.setPosition(1);
+                        ticket.overwritePermissions(message.guild.id, {
+                            SEND_MESSAGES: false,
+                            READ_MESSAGES: false
+                        });
+                            ticket.overwritePermissions(support.id, {
+                                SEND_MESSAGES: true,
+                                READ_MESSAGES: true
+                            });
+                                ticket.overwritePermissions(message.author.id, {
+                                    SEND_MESSAGES: true,
+                                    READ_MESSAGES: true
+                                });
+                    let embed = new Discord.RichEmbed()
+                                .setTitle('**تذكرة جديدة.**')
+                                .setColor("RANDOM")
+                                .setThumbnail(`${message.author.avatarURL}`)
+                                .addField('سبب التذكرة', args)
+                                .addField('صاحب التذكرة', message.author)
+                                .addField('الروم', `<#${message.channel.id}>`);
 
-
-        if(message.author.bot) return;
-
-        if(!args) return message.channel.send(`** BC [ Message ] :envelope:  ** ${prefix} `).then(msg => msg.delete(5000));
-
-        
-
-
-        message.channel.send(`** Are you sure you want to send the message? :mailbox_with_mail: **`).then(msg => msg.delete(5000));
-      
-              let bcSure = new Discord.RichEmbed()
-
-              
-message.channel.send(bcSure).then(msg => {
-msg.react('✅').then(() => msg.react('❎'));
-message.delete();
-
-            
-
-           
-
-       let yesEmoji = (reaction, user) => reaction.emoji.name === '✅'  && user.id === message.author.id;
-
-            let noEmoji = (reaction, user) => reaction.emoji.name === '❎' && user.id === message.author.id;
-
-            
-
-            let sendBC = msg.createReactionCollector(yesEmoji);
-
-            let dontSendBC = msg.createReactionCollector(noEmoji);
-
-            
-
-            sendBC.on('collect', r => {
-
-                message.guild.members.forEach(member => {
-
-                    member.send(args.replace(`[user]`, member)).catch();
-
-                    if(message.attachments.first()){
-
-                        member.sendFile(message.attachments.first().url).catch();
-
-                    }
-
-                })
-
-                message.channel.send(` **  Your message has been sent to me  [ ${msg.guild.memberCount} ]  Member of the server ✅ **`).then(msg => msg.delete(5000));
-
-                msg.delete();
-
-            })
-
-            dontSendBC.on('collect', r => {
-
-                msg.delete();
-
-                message.reply('** :white_check_mark: Your message has been successfully canceled **').then(msg => msg.delete(5000));
-
-            });
-
-        })
-
+                                ticket.sendEmbed(embed);
+                }) .catch();
     }
+    if(message.content.startsWith(prefix + 'close')) {
+            if(!message.member.hasPermission("ADMINISTRATOR")) return;
+        if(!message.channel.name.startsWith("𝑻𝑰𝑪𝑲𝑬𝑻")) {
+            return;
+        };  
+                let embed = new Discord.RichEmbed()
+                    .setAuthor("هل تريد فعلآ اغلاق التذكرة ؟.")
+                    .setColor("RANDOM");
+                    message.channel.sendEmbed(embed) .then(codes => {
 
+                    
+                        const filter = msg => msg.content.startsWith(prefix + 'close');
+                        message.channel.awaitMessages(response => response.content === prefix + 'close', {
+                            max: 1,
+                            time: 20000,
+                            errors: ['time']
+                        })
+                        .then((collect) => {
+                            message.channel.delete();
+                        }) .catch(() => {
+                            codes.delete()
+                                .then(message.channel.send('**Operation has been cancelled.**')) .then((c) => {
+                                    c.delete(4000);
+                                })
+                                    
+                            
+                        })
+
+
+                    })
+
+
+            
+    }
 });
 
+ 
 
+ 
 
-
-
-
-
+             
 
 client.login(process.env.BOT_TOKEN);
