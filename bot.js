@@ -8,7 +8,7 @@ client.on('ready', () => {
 
   console.log(`Logged in as ${client.user.tag}!`);
 
-client.user.setGame(`BC Angels`,'https://www.twitch.tv/MeeRcY')
+client.user.setGame(`Art house يرحب بكم متجر`,'https://www.twitch.tv/MeeRcY')
 
 });
 
