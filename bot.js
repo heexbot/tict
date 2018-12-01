@@ -8,7 +8,7 @@ client.on('ready', () => {
 
   console.log(`Logged in as ${client.user.tag}!`);
 
-client.user.setGame(`Art house يرحب بكم متجر`,'https://www.twitch.tv/MeeRcY')
+client.user.setGame(`Five Bc l FBc`,'https://www.twitch.tv/MeeRcY')
 
 });
 
@@ -20,9 +20,9 @@ client.user.setGame(`Art house يرحب بكم متجر`,'https://www.twitch.tv/
  
 
 client.on('message', message => {
-    var prefix = ''; // هنا تقدر تغير البرفكس
+    var prefix = 'F'; // هنا تقدر تغير البرفكس
 var command = message.content.split(" ")[0];
-if(command == prefix + 'BC') { // الكوماند !bc
+if(command == prefix + 'Bc') { // الكوماند !bc
     var args = message.content.split(' ').slice(1).join(' ');
 
 
